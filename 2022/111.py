@@ -15,24 +15,27 @@ def run():
 
         monkeys.append(monkey)
 
+    n = 1
+    for monkey in monkeys:
+        n *= monkey["div"]
+
     print(len(monkeys))
-    for round in range(20):
+    for round in range(10000):
         for monkey in monkeys:
             monkey["inspections"] += len(monkey["items"])
             while len(monkey["items"]) > 0:
-                item = monkey["items"].pop()
+                item = monkey["items"].pop(0)
                 op = monkey["op"]
                 op2 = item if op[2] == "old" else int(op[2])
 
                 new = item * op2 if op[1] == "*" else item + op2
-                next = monkey["next"][new // 3 % monkey["div"] == 0]
-                # print(item, op, new)
-                monkeys[next]["items"].append(item)
-        print([x["inspections"] for x in monkeys])
+                next = monkey["next"][new % monkey["div"] == 0]
+                
+                monkeys[next]["items"].append(new % n)
 
     inspections = [x["inspections"] for x in monkeys]
     inspections.sort()
-    print(inspections[-1]* inspections[-2])
+    print(n, inspections[-1]* inspections[-2])
 
 
 
