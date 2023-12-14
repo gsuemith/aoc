@@ -11,27 +11,36 @@ def run():
 
     # x_coords = [x for c in connections for idx, x in enumerate(c) if idx in {0,2}]
     distances = []
-    y = 2000000
-    covered = set()
-    B_in_row = set()
+    xmin, xmax = ymin, ymax = 0, 4000000
+
     for sx, sy, bx, by in connections:
         distances.append([(sx, sy), (bx, by), abs(bx-sx) + abs(by-sy)])
 
-    for S, B, MD in distances:
-        if B[1] == y:
-            B_in_row.add(B)
+    for y in range(ymin, ymax+1):
+        intervals = []
+        for S, B, MD in distances:
+            if abs(y - S[1]) > MD:
+                continue
+            dist = MD - abs(y - S[1])
+            left, right = S[0] - dist, S[0] + dist
+            intervals.append([max(xmin, left), min(xmax, right)])
 
-        if abs(y - S[1]) > MD:
-            continue
-
-        for dx in range(1 + MD - abs(y - S[1])):
-            covered.add((S[0] + dx,y))
-            covered.add((S[0] - dx,y))
-
-    for B in list(B_in_row):
-        covered.remove(B)
-    print(len(covered))
-
+        intervals.sort()
+        
+        idx = 1
+        while idx < len(intervals):
+            interval = intervals[idx]
+            if interval[-1] <= intervals[idx-1][-1] + 1:
+                intervals.pop(idx)
+                continue
+            
+            if interval[0] > intervals[idx-1][-1] + 1:
+                print(interval[0]-1, y)
+                return
+            idx += 1
+        print(intervals, y)
+        
+                
         
 
 
