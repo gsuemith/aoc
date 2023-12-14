@@ -90,11 +90,17 @@ def run():
         # if tup in tilts:
         #     print(tilts[tup], round)
         tilts[tuplify(e_tilt)] = round
-        print(round, len(tilts), sum(sum(stacks) for stacks in e_tilt))
+        if 330516 ==  sum(sum(stacks) for stacks in e_tilt):
+            break
+
+
 
             
+    total = 0
+    for i in range(r,0,-1):
+        total += i * len(e_tilt[r-i])
 
-    print(sum(sum(stacks) for stacks in e_tilt))
+    print(total)
 
 
 def tuplify(tilt):
